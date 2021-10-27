@@ -28,7 +28,7 @@ namespace ECommerceApi
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddHttpClient<UsBankHttpClient>(options =>
+            services.AddHttpClient<IUsBankHttpClient, UsBankHttpClient>(options =>
             {
                 options.BaseAddress = new Uri(Configuration.GetValue<string>("creditCardApi"));
             });

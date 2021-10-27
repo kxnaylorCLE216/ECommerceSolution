@@ -10,16 +10,25 @@ namespace ECommerceApi.Services
 {
     public class UsBankCreditCardService : IAuthorizeCreditCards
     {
-        private readonly UsBankHttpClient _client;
+        private readonly IUsBankHttpClient _client;
 
-        public UsBankCreditCardService(UsBankHttpClient client)
+        public UsBankCreditCardService(IUsBankHttpClient client)
         {
             _client = client;
         }
 
         public async Task<CreditCardAuthorizationResponse> AuthorizeAsync(CreditCardAuthorizationRequest creditCardInfo)
         {
-            return await _client.AuthorizeAsync(creditCardInfo);
+            try
+            {
+                return await _client.AuthorizeAsync(creditCardInfo);
+            }
+            catch (HttpRequestException)
+            {
+
+
+                return new CreditCardAuthorizationResponse { AuthorizationCode = "Credit Card Authorizaiton Pending" };
+            }
         }
     }
 }

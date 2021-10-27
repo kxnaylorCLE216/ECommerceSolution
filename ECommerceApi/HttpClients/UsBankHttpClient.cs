@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ECommerceApi.HttpClients
 {
-    public class UsBankHttpClient
+    public class UsBankHttpClient : IUsBankHttpClient
     {
 
         private readonly HttpClient _client;
@@ -22,9 +22,10 @@ namespace ECommerceApi.HttpClients
             client.DefaultRequestHeaders.Add("User-Agent", "ECommerce-Api");
         }
 
-        public async Task<CreditCardAuthorizationResponse> AuthorizeAsync(CreditCardAuthorizationRequest creditCardInfo)
+        public virtual async Task<CreditCardAuthorizationResponse> AuthorizeAsync(CreditCardAuthorizationRequest creditCardInfo)
         {
             var response = await _client.PostAsJsonAsync("/card-authorizations", creditCardInfo);
+            response.EnsureSuccessStatusCode();
             var content = await response.Content.ReadAsStreamAsync();
             var auth = await JsonSerializer.DeserializeAsync<CreditCardAuthorizationResponse>(content, new JsonSerializerOptions
             {

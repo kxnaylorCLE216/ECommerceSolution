@@ -1,5 +1,9 @@
 ﻿using ECommerceApi;
+using ECommerceApi.Models.Orders;
+using ECommerceApi.Services;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +20,30 @@ namespace ECommerceApiIntegrationTests.OrdersResource
 
         private readonly WebApplicationFactory<Startup> _factory;
         private readonly HttpClient _client;
+        private readonly Mock<IProcessOrders> _stubbedOrderProcessor;
         public PlacingAnOrderTests(WebApplicationFactory<Startup> factory)
         {
+            _stubbedOrderProcessor = new Mock<IProcessOrders>();
+
+            _stubbedOrderProcessor.Setup(
+                o => o.ProcessOrderAsync(It.IsAny<OrderPostRequest>()))
+                .Returns(Task.FromResult(OrdersTestData.ValidResponse));
             _factory = factory;
-            _client = _factory.CreateClient();
+
+            _client = _factory.WithWebHostBuilder(builder =>
+            {
+                builder.ConfigureServices(services =>
+                {
+                    var descriptor = services.SingleOrDefault(
+                            d => d.ServiceType == typeof(IProcessOrders)
+                        );
+                    services.Remove(descriptor);
+
+                    services.AddScoped<IProcessOrders>((_) => _stubbedOrderProcessor.Object);
+
+                });
+            }).CreateClient();
+            // _client = _factory.CreateClient();
         }
 
         [Fact]
@@ -43,6 +67,35 @@ namespace ECommerceApiIntegrationTests.OrdersResource
 
             Assert.Equal("application/json", response.Content.Headers.ContentType.MediaType);
         }
+
+        [Fact]
+        public async Task HasCorrectContent()
+        {
+            var response = await _client.PostAsJsonAsync("/orders", OrdersTestData.ValidOrder);
+
+            var content = await response.Content.ReadAsAsync<StandardOrderResponse>();
+
+            Assert.Equal("Groovy!", content.message);
+        }
+
+        [Fact]
+        public async Task PassedTheRightDataToTheService()
+        {
+
+            var response = await _client.PostAsJsonAsync("/orders", OrdersTestData.ValidOrder);
+            var calls = _stubbedOrderProcessor.Invocations.Select(inv =>
+            {
+
+                return inv.Arguments;
+            }).ToArray();
+
+            var order = calls[0][0] as OrderPostRequest;
+            Assert.NotNull(order); // It didn't pass it.
+            Assert.Equal("Bob Smith", order.Name);
+
+            //_stubbedOrderProcessor.Verify(m => m.ProcessOrderAsync())
+        }
+
     }
 
 

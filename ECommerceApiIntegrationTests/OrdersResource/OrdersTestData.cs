@@ -9,6 +9,17 @@ namespace ECommerceApiIntegrationTests.OrdersResource
 {
     public static class OrdersTestData
     {
+        public static OrderResponse ValidResponse = new OrderResponse
+        {
+            Message = "Groovy!",
+            AmountCharged = Decimal.MaxValue,
+            CreditCardAuthorization = "Awesome!",
+            OrderNumber = "99",
+            ShipDate = "Tomorrow",
+            Shipping = 19.99M,
+            Tax = 3.75M
+        };
+
         public static OrderRequest ValidOrder = new OrderRequest
         {
             name = "Bob Smith",
@@ -29,23 +40,19 @@ namespace ECommerceApiIntegrationTests.OrdersResource
 
 
         };
-        //public static OrderPostRequest ValidOrder = new OrderPostRequest
-        //{
-        //    Name = "Bob Smith",
-        //    Address = "1212 Orange St",
-        //    City = "Akron",
-        //    State = "OH",
-        //    PostalCode = "44319",
-        //    CreditCardInfo =  new ECommerceApi.Models.Orders.Creditcardinfo
-        //    {
-        //        Number = "555-55-5555",
-        //        Expiration = "06/22",
-        //        Cvv2 = "973"
-        //    },
-        //    Items = new List<ECommerceApi.Models.Orders.Item>
-        //            {
-        //                new ECommerceApi.Models.Orders.Item { Id="1", Name="Beer", Price=6.99M, Qty=1}
-        //            }
-        //};
+
     }
+
+
+    public class StandardOrderResponse
+    {
+        public string orderNumber { get; set; }
+        public string message { get; set; }
+        public string shipDate { get; set; }
+        public decimal amountCharged { get; set; }
+        public string creditCardAuthorization { get; set; }
+        public decimal tax { get; set; }
+        public decimal shipping { get; set; }
+    }
+
 }
