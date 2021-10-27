@@ -1,8 +1,11 @@
 ﻿using ECommerceApi;
 using Microsoft.AspNetCore.Mvc.Testing;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -10,9 +13,9 @@ namespace ECommerceApiIntegrationTests.OrdersResource
 {
     public class PlacingAnOrderTests : IClassFixture<WebApplicationFactory<Startup>>
     {
+
         private readonly WebApplicationFactory<Startup> _factory;
         private readonly HttpClient _client;
-
         public PlacingAnOrderTests(WebApplicationFactory<Startup> factory)
         {
             _factory = factory;
@@ -26,21 +29,22 @@ namespace ECommerceApiIntegrationTests.OrdersResource
 
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         }
-
         [Fact(Skip = "Wait until after I add the other resource")]
         public async Task HasLocationHeader()
         {
             // response should have a location header with the url to the new resource.
         }
-
         [Fact]
         public async Task HasCorrectContentTypeOnResponse()
         {
+
+
             var response = await _client.PostAsJsonAsync("/orders", OrdersTestData.ValidOrder);
 
             Assert.Equal("application/json", response.Content.Headers.ContentType.MediaType);
         }
     }
+
 
     public class OrderRequest
     {
@@ -67,4 +71,6 @@ namespace ECommerceApiIntegrationTests.OrdersResource
         public int qty { get; set; }
         public decimal price { get; set; }
     }
+
+
 }

@@ -1,4 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using ECommerceApi.Models.Orders;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ECommerceApiIntegrationTests.OrdersResource
 {
@@ -21,8 +26,9 @@ namespace ECommerceApiIntegrationTests.OrdersResource
                 {
                     new Item { id="1", name="Beer", price=6.99M, qty=1}
                 }
-        };
 
+
+        };
         //public static OrderPostRequest ValidOrder = new OrderPostRequest
         //{
         //    Name = "Bob Smith",

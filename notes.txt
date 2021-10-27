@@ -1,0 +1,1 @@
+docker run -p 8080:80 jeffrygonzalez/credit-card-training-api:v0.0.1
