@@ -5,11 +5,20 @@ namespace ECommerceApi.Filters
 {
     public class ValidateModelAttribute : ActionFilterAttribute
     {
+        public bool IncludeModelState { get; set; } = false;
+
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             if (!context.ModelState.IsValid)
             {
-                context.Result = new BadRequestResult();
+                if (IncludeModelState)
+                {
+                    context.Result = new BadRequestObjectResult(context.ModelState);
+                }
+                else
+                {
+                    context.Result = new BadRequestResult();
+                }
             }
         }
     }
