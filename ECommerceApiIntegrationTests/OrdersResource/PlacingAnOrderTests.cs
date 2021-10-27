@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace ECommerceApiIntegrationTests.Orders.Resource
+namespace ECommerceApiIntegrationTests.OrdersResource
 {
     public class PlacingAnOrderTests : IClassFixture<WebApplicationFactory<Startup>>
     {
@@ -22,42 +22,23 @@ namespace ECommerceApiIntegrationTests.Orders.Resource
         [Fact]
         public async Task Gets201StatusCode()
         {
-            var response = await _client.PostAsync("/orders", null);
+            var response = await _client.PostAsJsonAsync("/orders", OrdersTestData.ValidOrder);
 
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         }
 
-        [Fact(Skip ="Wait until after I add the other resource")]
+        [Fact(Skip = "Wait until after I add the other resource")]
         public async Task HasLocationHeader()
         {
-            // response should have a location header with the 
+            // response should have a location header with the url to the new resource.
         }
 
         [Fact]
-        public async Task HasCorrectContectTypeOnResponse()
+        public async Task HasCorrectContentTypeOnResponse()
         {
-            var sampleData = new OrderRequest
-            {
-                name = "Bob Smith",
-                address = "1212 Orange St",
-                city = "Akron",
-                state = "OH",
-                zip = "44319",
-                creditCardInfo = new Creditcardinfo
-                {
-                    number = "555-55-5555",
-                    expiration = "06/22",
-                    cvv2 = "973"
-                },
-                items = new List<Item>
-                {
-                    new Item { id="1", name="Beer", price=6.99M, qty=1}
-                }
-            };
+            var response = await _client.PostAsJsonAsync("/orders", OrdersTestData.ValidOrder);
 
-            var reponse = await _client.PostAsJsonAsync("/orders", sampleData);
-
-            Assert.Equal("application/json", reponse.Content.Headers.ContentType.MediaType);
+            Assert.Equal("application/json", response.Content.Headers.ContentType.MediaType);
         }
     }
 

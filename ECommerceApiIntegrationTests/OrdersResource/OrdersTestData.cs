@@ -1,13 +1,8 @@
-﻿using ECommerceApiIntegrationTests.Orders.Resource;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace ECommerceApiIntegrationTests.OrdersResource
 {
-   public static class OrdersTestData
+    public static class OrdersTestData
     {
         public static OrderRequest ValidOrder = new OrderRequest
         {
@@ -18,19 +13,14 @@ namespace ECommerceApiIntegrationTests.OrdersResource
             zip = "44319",
             creditCardInfo = new Creditcardinfo
             {
-                Number = "555-55-5555",
-                Expiration = "06/22",
-                Cvv2 = "973"
+                number = "555-55-5555",
+                expiration = "06/22",
+                cvv2 = "973"
             },
             items = new List<Item>
-{
-new Item { Id="1", Name="Beer", Price=6.99M, Qty=1}
-}
-
-
-
-
+                {
+                    new Item { id="1", name="Beer", price=6.99M, qty=1}
+                }
         };
-
     }
 }
